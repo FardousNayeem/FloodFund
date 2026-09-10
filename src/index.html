@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FloodFund</title>
+    <meta
+      name="description"
+      content="Route donations to Sylhet, Chittagong South and Chittagong North flood relief funds on Ethereum."
+    />
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="css/phosphor.css" />
+    <link rel="stylesheet" href="css/app.css" />
+  </head>
+  <body>
+    <header class="masthead">
+      <div class="shell masthead__inner">
+        <div class="wordmark">
+          <i class="ph ph-drop-half" aria-hidden="true"></i>
+          FloodFund
+        </div>
+
+        <div class="masthead__meta">
+          <span class="pill" id="networkPill" data-state="idle">
+            <span class="pill__dot" aria-hidden="true"></span>
+            <span id="networkLabel">Not connected</span>
+          </span>
+
+          <button class="btn btn--icon" id="themeToggle" type="button" aria-label="Switch colour theme">
+            <i class="ph ph-moon" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <!-- TODO: hero image slot, 1400x900. Left deliberately empty rather than
+           filled with unrelated stock photography of a real disaster. -->
+      <section class="hero">
+        <div class="shell hero__grid">
+          <div>
+            <h1>Relief money that arrives whole</h1>
+            <p class="hero__lede">
+              Donate straight to one of three relief funds. Each transfer settles on chain in the same
+              transaction.
+            </p>
+            <div class="hero__actions">
+              <button class="btn btn--primary" id="connectButton" type="button">
+                <i class="ph ph-wallet" aria-hidden="true"></i>
+                Connect wallet
+              </button>
+              <a class="btn" id="contractLink" href="#contract">
+                <i class="ph ph-file-text" aria-hidden="true"></i>
+                View the contract
+              </a>
+            </div>
+          </div>
+
+          <div class="tally">
+            <p class="tally__label">Raised through this contract</p>
+            <p class="tally__value mono">
+              <span class="skeleton" id="totalRaised">0.000</span
+              ><span class="tally__unit">ETH</span>
+            </p>
+            <p class="tally__note">
+              Counts only donations made here. It does not read the fundraisers' wallet balances.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="zones" aria-labelledby="zonesHeading">
+        <div class="shell">
+          <h2 class="visually-hidden" id="zonesHeading">Raised by zone</h2>
+          <div class="zones__panel" id="zoneList">
+            <!-- rows rendered by app.js -->
+          </div>
+        </div>
+      </section>
+
+      <section class="actions">
+        <div class="shell actions__grid">
+          <div class="panel">
+            <div class="panel__head">
+              <h2>Register as a donor</h2>
+              <p class="panel__sub">
+                One registration per wallet. Registering again updates your details.
+              </p>
+            </div>
+
+            <div class="notice notice--info" id="registerStatus" hidden>
+              <i class="ph ph-info" aria-hidden="true"></i>
+              <span></span>
+            </div>
+
+            <form id="registerForm" novalidate>
+              <div class="field">
+                <label for="donorName">Display name</label>
+                <input class="input" id="donorName" name="donorName" autocomplete="name" required />
+                <p class="field__help">Shown against your donations on the public record.</p>
+                <p class="field__error" id="donorNameError" hidden></p>
+              </div>
+
+              <div class="field">
+                <label for="donorMobile">Mobile number</label>
+                <input
+                  class="input"
+                  id="donorMobile"
+                  name="donorMobile"
+                  inputmode="tel"
+                  autocomplete="tel"
+                  required
+                />
+                <p class="field__help">
+                  Stored as a one way hash. The number itself never reaches the chain.
+                </p>
+                <p class="field__error" id="donorMobileError" hidden></p>
+              </div>
+
+              <button class="btn btn--primary btn--block" id="registerSubmit" type="submit" disabled>
+                Register
+              </button>
+            </form>
+          </div>
+
+          <div class="panel">
+            <div class="panel__head">
+              <h2>Donate</h2>
+              <p class="panel__sub">
+                Pick a zone and an amount. The full value goes to that zone's fundraiser.
+              </p>
+            </div>
+
+            <div class="notice notice--info" id="donateStatus" hidden>
+              <i class="ph ph-info" aria-hidden="true"></i>
+              <span></span>
+            </div>
+
+            <form id="donateForm" novalidate>
+              <div class="field">
+                <label for="donateZone">Relief zone</label>
+                <select class="select" id="donateZone" name="donateZone" required>
+                  <option value="0">Sylhet</option>
+                  <option value="1">Chittagong South</option>
+                  <option value="2">Chittagong North</option>
+                </select>
+                <p class="field__help">
+                  A fixed list. There is no way to pay into a zone that does not exist.
+                </p>
+              </div>
+
+              <div class="field">
+                <label for="donateAmount">Amount</label>
+                <div class="amount">
+                  <input
+                    class="input"
+                    id="donateAmount"
+                    name="donateAmount"
+                    inputmode="decimal"
+                    placeholder="0.05"
+                    required
+                  />
+                  <span class="amount__unit">ETH</span>
+                </div>
+                <p class="field__help" id="donateHelp">Entered in ether, not wei.</p>
+                <p class="field__error" id="donateAmountError" hidden></p>
+              </div>
+
+              <button class="btn btn--primary btn--block" id="donateSubmit" type="submit" disabled>
+                Donate
+              </button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <section class="actions" aria-labelledby="lookupHeading">
+        <div class="shell">
+          <div class="panel">
+            <div class="panel__head">
+              <h2 id="lookupHeading">Look up a donor</h2>
+              <p class="panel__sub">Any wallet address on the public record.</p>
+            </div>
+
+            <form id="lookupForm" novalidate>
+              <div class="field">
+                <label for="lookupAddress">Wallet address</label>
+                <input
+                  class="input mono"
+                  id="lookupAddress"
+                  name="lookupAddress"
+                  placeholder="0x..."
+                  spellcheck="false"
+                  required
+                />
+                <p class="field__error" id="lookupError" hidden></p>
+              </div>
+              <button class="btn btn--block" id="lookupSubmit" type="submit">Look up</button>
+            </form>
+
+            <div class="empty" id="lookupEmpty">
+              <i class="ph ph-magnifying-glass" aria-hidden="true"></i>
+              No address checked yet.
+            </div>
+
+            <dl class="readout" id="lookupResult" hidden>
+              <div class="readout__row"><dt>Name</dt><dd id="lookupName"></dd></div>
+              <div class="readout__row"><dt>Donor number</dt><dd id="lookupId" class="mono"></dd></div>
+              <div class="readout__row"><dt>Donations</dt><dd id="lookupCount" class="mono"></dd></div>
+              <div class="readout__row"><dt>Total given</dt><dd id="lookupTotal" class="mono"></dd></div>
+            </dl>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer" id="contract">
+      <div class="shell footer__grid">
+        <dl>
+          <dt>Contract</dt>
+          <dd id="footerAddress">Not loaded</dd>
+        </dl>
+        <dl>
+          <dt>Network</dt>
+          <dd id="footerNetwork">Not connected</dd>
+        </dl>
+        <dl>
+          <dt>Donors registered</dt>
+          <dd id="footerDonors">0</dd>
+        </dl>
+      </div>
+    </footer>
+
+    <script src="js/ethers.umd.min.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>

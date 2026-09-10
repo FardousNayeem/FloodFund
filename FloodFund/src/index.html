@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+   <meta charset="utf-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+   <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+   <title>Flood Fund</title>
+
+
+   <!-- Bootstrap -->
+   <link href="css/bootstrap.min.css" rel="stylesheet">
+
+
+   <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+   <!--[if lt IE 9]>
+     <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+   <![endif]-->
+ </head>
+ <body>
+  <div class="container w-100 min-vh-100">
+    <h1 class="text-center">Flood Fund</h1>
+    <hr />
+    <div class="d-flex justify-content-center align-items-center">
+      <div class="w-50">
+        <div id="registerForm" class="text-center">
+          <hr />
+          <div class="form-group">
+            <label for="donorName">Enter Your Name</label>
+            <input class="form-control" name="donorName" id="donorName" required />
+            <label for="number">Enter Your Mobile Number</label>
+            <input class="form-control" name="number" id="number" required />
+          </div>
+          <button class="btn btn-primary text-center" onclick="App.register()">Register</button>
+          <hr />
+        </div>
+        <button id="registerButton" class="btn btn-success form-control my-2" onclick="App.registerClick()">Register Donor</button>
+
+        <div id="donationForm" class="text-center">
+          <hr />
+          <div class="form-group">
+            <label for="donateNumber">Enter Your Number</label>
+            <input class="form-control" name="donateNumber" id="donateNumber" required />
+            <label for="region">Enter Region</label>
+            <input class="form-control" name="region" id="region" required />
+            <label for="balance">Value</label>
+            <input class="form-control" name="balance" id="balance" required />
+          </div>
+          <button class="btn btn-primary text-center" onclick="App.donate()">Donate</button>
+          <hr />
+        </div>
+        <button id="donateButton" class="btn btn-primary form-control my-2" onclick="App.donateClick()">Donate</button>
+
+        <table id="donations" class="table">
+          <thead>
+            <tr>
+              <th>Region</th>
+              <th>Total Donations</th>
+            </tr>
+          </thead>
+          <tbody id="results">
+            <tr><td>" + region + "</td><td>" + value + "</td></tr>
+          </tbody>
+        </table>
+        <button id="checkDonationButton" class="btn btn-warning form-control my-2" onclick="App.checkDonations()">Check Donations</button>
+
+        
+        <div id="infoForm" class="text-center">
+          <hr />
+          <div class="form-group">
+            <label for="address">Enter Your Address</label>
+            <input class="form-control" name="address" id="address" required />
+          </div>
+          <button class="btn btn-info text-center" onclick="App.checkInfo()">Check</button>
+          <hr />
+        </div>
+        <p id="donorInfoName" class="text-center"></p>
+        <p id="donorInfoNumber" class="text-center"></p>
+        <button id="infoButton" class="btn btn-info form-control my-2" onclick="App.infoClick()">Check Donor Info</button>
+        <button id="clearButton" class="btn btn-info form-control my-2" onclick="App.clearInfo()">Clear</button>
+    </div>
+    </div>
+    <p id="accountAddress" class="text-center"></p>
+  </div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/web3.min.js"></script>
+    <script src="js/truffle-contract.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>

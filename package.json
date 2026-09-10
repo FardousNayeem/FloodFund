@@ -1,0 +1,24 @@
+{
+  "name": "floodfund",
+  "version": "1.0.0",
+  "description": "Ethereum donation routing for Bangladesh flood relief, by zone.",
+  "license": "GPL-3.0",
+  "scripts": {
+    "dev": "lite-server",
+    "compile": "truffle compile",
+    "migrate": "truffle migrate",
+    "test": "truffle test --network test",
+    "ci": "npm run compile && npm test"
+  },
+  "devDependencies": {
+    "lite-server": "^2.6.1",
+    "truffle": "^5.11.5"
+  },
+  "dependencies": {
+    "a": "^4.0.8",
+    "l": "^0.6.0",
+    "n": "^10.2.0",
+    "s": "^1.0.0",
+    "t": "^0.5.1"
+  }
+}
