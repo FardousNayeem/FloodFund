@@ -1,6 +1,14 @@
+
+<div align="center">
+
 # FloodFund
 
 Donation routing for Bangladesh flood relief on Ethereum.
+
+<div align="center">
+  <img src="images/dashboard.png" alt="sky-pulse dashboard" width="400" height="250">
+  <img src="images/reg_don.png" alt="Topic detail view" width="400" height="250">
+</div>
 
 A donor registers a wallet once, picks one of three relief zones, and the
 contract forwards the full amount to that zone's fundraiser in the same
@@ -11,6 +19,7 @@ ether behind reverts instead.
 Donor  ->  FloodFund  ->  Sylhet | Chittagong South | Chittagong North
               (pass-through, same transaction)
 ```
+</div>
 
 ## Quick start
 
@@ -49,28 +58,6 @@ chain id `1337`.
 | `npm run migrate` | Deploy to the local chain |
 | `npm test` | Run the suite on an in-process chain, no node needed |
 | `npm run ci` | Compile, then test |
-
-## Security fixes
-
-The first version had two defects that could lose money. Both are covered by
-tests.
-
-| Defect | Fix |
-|---|---|
-| Anyone could donate without registering, because an unregistered address stored an empty contact string that satisfied the check | Registration is a `registered` flag, and `donate` tests that flag |
-| A misspelled zone matched no branch, so the ether stayed in a contract with no withdrawal path | Zones are an `enum`, so an unknown value fails ABI decoding before `donate` runs |
-
-Also hardened:
-
-- `getDonationsInfo` reports what was raised here, not fundraiser wallet
-  balances. The old reading survives as `getFundraiserBalances`.
-- Mobile numbers are stored as a hash of the address and the number. The
-  plaintext never reaches the chain.
-- Re-registering updates a profile instead of minting a second donor id.
-- Fundraiser wallets are configurable and rotatable by the owner.
-- Transfers use `call`, writes follow checks-effects-interactions, and `donate`
-  is reentrancy guarded.
-- `receive` and `fallback` reject bare transfers.
 
 ## Layout
 
